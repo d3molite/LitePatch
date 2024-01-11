@@ -1,0 +1,34 @@
+﻿@page "/PatchCreate"
+@using LitePatch.Services.Interfaces
+@using System.Windows.Forms
+@using DialogResult = System.Windows.Forms.DialogResult
+@inject IGitInfoService GitInfoService
+
+<MudStack>
+    <MudStack Row="true">
+        <MudTextField T="string" Text="@GitInfoService.RepositoryPath" ReadOnly="true"/>
+        <MudButton @onclick="OpenFolder">Open</MudButton>
+    </MudStack>
+</MudStack>
+
+
+@code {
+    
+
+    private void OpenFolder()
+    {
+        using var dialog = new FolderBrowserDialog();
+        var result = dialog.ShowDialog();
+
+        if (result != DialogResult.OK || string.IsNullOrEmpty(dialog.SelectedPath)) return;
+        
+        GitInfoService.RepositoryPath = dialog.SelectedPath;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void ReadRepository()
+    {
+        
+    }
+
+}

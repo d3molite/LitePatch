@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LitePatch.Main", "LitePatch.Main\LitePatch.Main.csproj", "{75D0CDD2-9CE5-4D18-9C08-C51EB479B32A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LitePatch.Services", "LitePatch.Services\LitePatch.Services.csproj", "{5E689806-C0AF-40D0-AA51-A88CD3D6FE1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LitePatch.Ui", "LitePatch.Ui\LitePatch.Ui.csproj", "{0376855B-686D-4D87-B44F-82E7533DA6FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75D0CDD2-9CE5-4D18-9C08-C51EB479B32A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75D0CDD2-9CE5-4D18-9C08-C51EB479B32A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75D0CDD2-9CE5-4D18-9C08-C51EB479B32A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75D0CDD2-9CE5-4D18-9C08-C51EB479B32A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E689806-C0AF-40D0-AA51-A88CD3D6FE1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E689806-C0AF-40D0-AA51-A88CD3D6FE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E689806-C0AF-40D0-AA51-A88CD3D6FE1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E689806-C0AF-40D0-AA51-A88CD3D6FE1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0376855B-686D-4D87-B44F-82E7533DA6FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0376855B-686D-4D87-B44F-82E7533DA6FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0376855B-686D-4D87-B44F-82E7533DA6FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0376855B-686D-4D87-B44F-82E7533DA6FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
