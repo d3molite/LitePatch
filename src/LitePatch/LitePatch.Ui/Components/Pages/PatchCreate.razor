@@ -1,33 +1,36 @@
 ﻿@page "/PatchCreate"
 @using LitePatch.Services.Interfaces
-@using System.Windows.Forms
-@using DialogResult = System.Windows.Forms.DialogResult
+@using LibGit2Sharp
 @inject IGitInfoService GitInfoService
 
-<MudStack>
-    <MudStack Row="true">
-        <MudTextField T="string" Text="@GitInfoService.RepositoryPath" ReadOnly="true"/>
-        <MudButton @onclick="OpenFolder">Open</MudButton>
-    </MudStack>
+<MudStack Class="p-3">
+    <MudText>Create Patches from commits by clicking the arrows next to the commit message.</MudText>
+    <MudTable Items="@GitInfoService.CommitsOnBranch">
+        <HeaderContent>
+            <MudTh>Commit Name</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="CommitName">@context.Message</MudTd>
+            <MudTd DataLabel="Actions">
+                <CellTemplate>
+                    <MudIconButton Icon="@Icons.Material.Outlined.DoubleArrow" @onclick="() => CreatePatch(context)"/>
+                </CellTemplate>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 </MudStack>
 
 
 @code {
-    
-
-    private void OpenFolder()
+    protected override void OnInitialized()
     {
-        using var dialog = new FolderBrowserDialog();
-        var result = dialog.ShowDialog();
-
-        if (result != DialogResult.OK || string.IsNullOrEmpty(dialog.SelectedPath)) return;
-        
-        GitInfoService.RepositoryPath = dialog.SelectedPath;
-        InvokeAsync(StateHasChanged);
+        GitInfoService.InfoChanged += (_, _) => InvokeAsync(StateHasChanged);
     }
 
-    private void ReadRepository()
+    private void CreatePatch(Commit commit)
     {
+        var sha = commit.Sha;
         
     }
 

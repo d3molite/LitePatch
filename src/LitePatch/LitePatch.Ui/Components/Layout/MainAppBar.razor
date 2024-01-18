@@ -1,0 +1,30 @@
+﻿@using LitePatch.Services.Interfaces
+@inject IGitInfoService GitInfoService
+
+<MudAppBar Elevation="3" Class="d-flex">
+    <MudStack Class="flex-grow-1" Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+        <MudText Typo="Typo.h5" Class="ml-3">LitePatch</MudText>
+        <MudText>Current Repo: @RepositoryName</MudText>
+        <MudText>Current Branch: @GitInfoService.CurrentBranch</MudText>
+        <MudLink Href="RepositoryPicker" Color="Color.Default">Change?</MudLink>
+        <MudIconButton Icon="@Icons.Material.Filled.Refresh" Color="Color.Default" @onclick="Refresh"></MudIconButton>
+    </MudStack>
+</MudAppBar>
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        GitInfoService.InfoChanged += (_, _) => InvokeAsync(StateHasChanged);
+    }
+
+    private string? RepositoryName => GitInfoService.CurrentRepository?.Network.Remotes.First()?.Url.Split("/").Last();
+
+
+    private void Refresh()
+    {
+        GitInfoService.ReadRepositoryInfo();
+    }
+
+}

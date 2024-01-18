@@ -5,11 +5,13 @@ namespace LitePatch.Services.Services;
 
 public class GitInfoService : IGitInfoService
 {
-    public string RepositoryPath { get; set; }
+    public string RepositoryPath { get; set; } = string.Empty;
+    
+    public Repository CurrentRepository { get; set; }
     
     public Branch CurrentBranch { get; set; }
     
-    public List<Commit> CommitsOnBranch { get; set; }
+    public List<Commit> CommitsOnBranch { get; set; }  = new();
 
     public GitInfoService()
     {
@@ -22,9 +24,10 @@ public class GitInfoService : IGitInfoService
 
         try
         {
-            var repo = new Repository(RepositoryPath);
-            CurrentBranch = repo.Head;
+            CurrentRepository = new Repository(RepositoryPath);
+            CurrentBranch = CurrentRepository.Head;
             CommitsOnBranch = CurrentBranch.Commits.Take(10).ToList();
+            InfoChanged?.Invoke(this, EventArgs.Empty);
         }
         catch
         {
@@ -33,4 +36,6 @@ public class GitInfoService : IGitInfoService
 
         return true;
     }
+
+    public event EventHandler? InfoChanged;
 }

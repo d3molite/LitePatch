@@ -1,22 +1,23 @@
-﻿@inherits LayoutComponentBase
+﻿@using LitePatch.Services.Interfaces
+@inherits LayoutComponentBase
 
-<MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
+<MudThemeProvider IsDarkMode="true"/>
+
 
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudText Typo="Typo.h5" Class="ml-3">LitePatch</MudText>
-        <MudLink Color="Color.Dark" Href="PatchCreate">Create Patches</MudLink>
-        <MudLink Color="Color.Dark" Href="PatchApply">Apply Patches</MudLink>
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
-    </MudAppBar>
-    <MudMainContent>
-        <div class="p-3 h-100 w-100 mw-100 mh-100">
-            @Body
-        </div>
-    </MudMainContent>
+    <MudPaper Elevation="0" Class="vh-100 vw-100 mw-100 mh-100 overflow-hidden" Square="true">
+        <MainAppBar/>
+        <MudMainContent>
+            <div class="h-100 w-100 mw-100 mh-100 d-flex flex-column overflow-hidden">
+                <SubAppBar/>
+                <div class="p-3 h-100 w-100 mw-100 mh-100 overflow-scroll">
+                    @Body
+                </div>
+            </div>
+        </MudMainContent>
+    </MudPaper>
 </MudLayout>
 
 <div id="blazor-error-ui">

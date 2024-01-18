@@ -1,0 +1,37 @@
+﻿@page "/RepositoryPicker"
+@using LitePatch.Services.Interfaces
+@using System.Windows.Forms
+@using DialogResult = System.Windows.Forms.DialogResult
+@inject IGitInfoService GitInfoService
+
+<MudPaper Class="p-3" Elevation="1">
+    <MudStack>
+        <MudText>Select a repository</MudText>
+        <MudStack Row="true">
+            <MudTextField Label="Repository Folder" T="string" Text="@GitInfoService.RepositoryPath" ReadOnly="true"/>
+            <MudButton @onclick="OpenFolder">Select</MudButton>
+        </MudStack>
+        <MudButton @onclick="ReadRepository">Read Repo</MudButton>
+        <MudText>Branch: @GitInfoService.CurrentBranch</MudText>
+        <MudText>Commits: @GitInfoService.CommitsOnBranch.Count</MudText>
+    </MudStack>
+</MudPaper>
+
+
+@code {
+    private void OpenFolder()
+    {
+        using var dialog = new FolderBrowserDialog();
+        var result = dialog.ShowDialog();
+
+        if (result != DialogResult.OK || string.IsNullOrEmpty(dialog.SelectedPath)) return;
+        
+        GitInfoService.RepositoryPath = dialog.SelectedPath;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void ReadRepository()
+    {
+        GitInfoService.ReadRepositoryInfo();
+    }
+}
