@@ -21,6 +21,7 @@ public partial class MainWindow : Window
         collection.AddMudServices();
 
         collection.AddSingleton<IGitInfoService, GitInfoService>();
+        collection.AddSingleton<IGitPatchService, GitPatchService>();
         
         Resources.Add("services", collection.BuildServiceProvider());
     }
