@@ -20,6 +20,7 @@ public partial class MainWindow : Window
         collection.AddBlazorWebViewDeveloperTools();
         collection.AddMudServices();
 
+        collection.AddSingleton<ISettingsService, SettingsService>();
         collection.AddSingleton<IGitInfoService, GitInfoService>();
         collection.AddSingleton<IGitPatchService, GitPatchService>();
         

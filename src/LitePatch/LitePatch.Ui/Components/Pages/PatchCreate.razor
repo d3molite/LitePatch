@@ -1,19 +1,14 @@
 ﻿@page "/PatchCreate"
 @using LitePatch.Services.Interfaces
 @using LibGit2Sharp
-@using DialogResult = System.Windows.Forms.DialogResult
-@using System.Windows.Forms
+@using LitePatch.Ui.Components.Controls
 @inject IGitInfoService GitInfoService
 @inject IGitPatchService GitPatchService
 
 <MudPaper Elevation="2">
     <MudStack Class="p-2" Spacing="2">
         <MudText>Create Patches from commits by clicking the arrows next to the commit message.</MudText>
-        <MudStack Row="true">
-            <MudTextField T="string" @bind-Value="OutputDirectory" ReadOnly="true" Label="Select an output directory"/>
-            <MudButton @onclick="OpenFolder">Select</MudButton>
-        </MudStack>
-        <MudTable Items="@GitInfoService.CommitsOnBranch" Dense="true">
+        <MudTable Items="@GitInfoService.CommitsOnBranch" Dense="true" Elevation="0">
             <HeaderContent>
                 <MudTh>Commit Name</MudTh>
                 <MudTh>Actions</MudTh>
@@ -32,8 +27,6 @@
 
 
 @code {
-
-    private string OutputDirectory { get; set; } = string.Empty;
     protected override void OnInitialized()
     {
         GitInfoService.InfoChanged += (_, _) => InvokeAsync(StateHasChanged);
@@ -42,19 +35,9 @@
     private void CreatePatch(Commit commit)
     {
         var sha = commit.Sha;
-        
-        GitPatchService.CreatePatch(sha, OutputDirectory);
+        GitPatchService.CreatePatch(sha, commit.Message);
     }
     
-    private void OpenFolder()
-    {
-        using var dialog = new FolderBrowserDialog();
-        var result = dialog.ShowDialog();
-
-        if (result != DialogResult.OK || string.IsNullOrEmpty(dialog.SelectedPath)) return;
-        
-        OutputDirectory = dialog.SelectedPath;
-        InvokeAsync(StateHasChanged);
-    }
+    
 
 }

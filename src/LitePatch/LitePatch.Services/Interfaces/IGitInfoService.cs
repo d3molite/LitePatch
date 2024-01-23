@@ -10,7 +10,7 @@ public interface IGitInfoService
 
     public List<Commit> CommitsOnBranch { get; set; }
     
-    public string RepositoryPath { get; set; }
+    public string RepositoryPath { get; }
 
     public bool ReadRepositoryInfo();
 

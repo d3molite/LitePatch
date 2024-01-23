@@ -5,7 +5,19 @@ namespace LitePatch.Services.Services;
 
 public class GitInfoService : IGitInfoService
 {
-    public string RepositoryPath { get; set; } = string.Empty;
+    private readonly ISettingsService _settingsService;
+
+    public GitInfoService(ISettingsService settingsService)
+    {
+        _settingsService = settingsService;
+
+        if (!string.IsNullOrEmpty(settingsService.Settings.RepositoryPath))
+        {
+            ReadRepositoryInfo();
+        }
+    }
+
+    public string RepositoryPath => _settingsService.Settings.RepositoryPath;
     
     public Repository CurrentRepository { get; set; }
     
@@ -13,11 +25,6 @@ public class GitInfoService : IGitInfoService
     
     public List<Commit> CommitsOnBranch { get; set; }  = new();
 
-    public GitInfoService()
-    {
-        
-    }
-    
     public bool ReadRepositoryInfo()
     {
         if (string.IsNullOrEmpty(RepositoryPath)) return false;

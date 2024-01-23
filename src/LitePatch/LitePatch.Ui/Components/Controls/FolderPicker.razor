@@ -1,0 +1,42 @@
+﻿@using System.Windows.Forms
+@using DialogResult = System.Windows.Forms.DialogResult
+<MudTextField 
+    T="string" 
+    ReadOnly="true" 
+    @bind-Value="FolderPath" 
+    Label="@Label"
+    @onclick="OpenFolder"/>
+
+@code {
+
+    [Parameter]
+    public string FolderPath
+    {
+        get => _folderPath;
+        set
+        {
+            if (value == _folderPath) return;
+            _folderPath = value;
+            FolderPathChanged.InvokeAsync(_folderPath);
+        }
+    }
+    
+    [Parameter]
+    public EventCallback<string> FolderPathChanged { get; set; }
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    private string _folderPath = string.Empty;
+    
+    private void OpenFolder()
+    {
+        using var dialog = new FolderBrowserDialog();
+        var result = dialog.ShowDialog();
+
+        if (result != DialogResult.OK || string.IsNullOrEmpty(dialog.SelectedPath)) return;
+        
+        FolderPath = dialog.SelectedPath;
+        InvokeAsync(StateHasChanged);
+    }
+}

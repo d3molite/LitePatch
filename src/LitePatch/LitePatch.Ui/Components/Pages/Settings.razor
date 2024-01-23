@@ -1,0 +1,48 @@
+﻿@page "/Settings"
+@using LitePatch.Services.Interfaces
+@using LitePatch.Ui.Components.Controls
+@inject IGitInfoService GitInfoService
+@inject ISettingsService SettingsService
+
+<MudStack>
+    <MudPaper Class="p-2 m-2" Elevation="2">
+        <MudStack>
+            <MudText>Select a repository folder</MudText>
+            <FolderPicker 
+                Label="Repository" 
+                FolderPath="@SettingsService.Settings.RepositoryPath" 
+                FolderPathChanged="v => SetRepoFolder(v)"/>
+        </MudStack>
+    </MudPaper>
+    <MudPaper Class="p-2 m-2" Elevation="2">
+        <MudStack>
+            <MudText>Select a patch output folder</MudText>
+            <FolderPicker 
+                Label="Output" 
+                FolderPath="@SettingsService.Settings.OutputFolderPath" 
+                FolderPathChanged="v => SetOutputFolder(v)"/>
+        </MudStack>
+    </MudPaper>
+</MudStack>
+
+@code {
+
+    private void SetRepoFolder(string folder)
+    {
+        SettingsService.Settings.RepositoryPath = folder;
+        SettingsService.Save();
+        GitInfoService.ReadRepositoryInfo();
+    }
+
+    private void SetOutputFolder(string folder)
+    {
+        SettingsService.Settings.OutputFolderPath = folder;
+        SettingsService.Save();
+    }
+
+    private void ReadRepository()
+    {
+        GitInfoService.ReadRepositoryInfo();
+    }
+
+}

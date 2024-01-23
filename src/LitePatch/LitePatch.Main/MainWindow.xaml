@@ -6,7 +6,8 @@
         xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation/blazor"
         xmlns:components1="clr-namespace:LitePatch.Ui.Components;assembly=LitePatch.Ui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1000" Width="1280">
+        Title="MainWindow" Height="1000" Width="1280"
+        Background="#373740">
     <Grid>
         <wpf:BlazorWebView HostPage="wwwroot\index.html" Services="{DynamicResource services}">
             <wpf:BlazorWebView.RootComponents>

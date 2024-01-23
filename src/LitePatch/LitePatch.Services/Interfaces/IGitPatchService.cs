@@ -2,5 +2,7 @@
 
 public interface IGitPatchService
 {
-    public void CreatePatch(string sha, string outputDir);
+    public void CreatePatch(string sha, string commitName);
+
+    public void ApplyPatch();
 }
