@@ -41,7 +41,7 @@ public class SettingsRepository : ISettingsRepository
         File.WriteAllText(SettingsFilePath, json);
     }
     
-    public void CheckForPath()
+    private void CheckForPath()
     {
         if (!Directory.Exists(_settingsPath))
             Directory.CreateDirectory(_settingsPath);

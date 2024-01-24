@@ -8,5 +8,4 @@ public interface ISettingsRepository
 
     public void WriteSettings(ApplicationSetting settings);
 
-    public void CheckForPath();
 }

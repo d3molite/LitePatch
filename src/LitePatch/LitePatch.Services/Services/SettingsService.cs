@@ -8,18 +8,18 @@ namespace LitePatch.Services.Services;
 
 public class SettingsService : ISettingsService
 {
-    public SettingsRepository SettingsRepository { get; set; }
+    private readonly ISettingsRepository _settingsRepository;
     public ApplicationSetting Settings { get; set; }
 
-    public SettingsService()
+    public SettingsService(ISettingsRepository settingsRepository)
     {
-        SettingsRepository = new SettingsRepository();
-        Settings = SettingsRepository.ReadSettings();
+        _settingsRepository = settingsRepository;
+        Settings = _settingsRepository.ReadSettings();
     }
 
     public void Save()
     {
-        SettingsRepository.WriteSettings(Settings);
+        _settingsRepository.WriteSettings(Settings);
     }
     
 }

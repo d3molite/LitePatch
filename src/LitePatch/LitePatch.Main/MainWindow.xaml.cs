@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using LitePatch.Services.Interfaces;
+using LitePatch.Services.Repo;
 using LitePatch.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
@@ -20,9 +21,11 @@ public partial class MainWindow : Window
         collection.AddBlazorWebViewDeveloperTools();
         collection.AddMudServices();
 
+        collection.AddSingleton<ISettingsRepository, SettingsRepository>();
         collection.AddSingleton<ISettingsService, SettingsService>();
         collection.AddSingleton<IGitInfoService, GitInfoService>();
         collection.AddSingleton<IGitPatchService, GitPatchService>();
+
         
         Resources.Add("services", collection.BuildServiceProvider());
     }
