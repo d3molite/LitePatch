@@ -1,8 +1,15 @@
-﻿namespace LitePatch.Services.Interfaces;
+﻿using LitePatch.Services.Models;
+
+namespace LitePatch.Services.Interfaces;
 
 public interface IGitPatchService
 {
-    public void CreatePatch(string sha, string commitName);
+    public List<PatchInfo> PatchList { get; set; }
+    public string RepoFolderPath { get; set; }
+    public void ExportPatch(string sha, string commitName);
+    public void ApplyPatch(PatchInfo patch);
 
-    public void ApplyPatch();
+    
+
+
 }

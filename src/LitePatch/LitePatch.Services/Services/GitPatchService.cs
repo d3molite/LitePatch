@@ -1,38 +1,43 @@
 ﻿using System.Management.Automation;
+using LibGit2Sharp;
 using LitePatch.Services.Interfaces;
+using LitePatch.Services.Models;
+using LitePatch.Services.Repo;
 
 namespace LitePatch.Services.Services;
 
-public class GitPatchService(IGitInfoService gitInfoService, ISettingsService settingsService) : IGitPatchService
+public class GitPatchService() : IGitPatchService
 {
-    private int _counter = 1;
+
+    private readonly IPatchRepository _patchRepository;
+    private readonly ISettingsService _settingsService;
+
+    public GitPatchService(IPatchRepository patchRepository, ISettingsService settingsService) : this()
+    {
+        _patchRepository = patchRepository;
+        var outputFolderPath = settingsService.Settings.OutputFolderPath;
+
+        if (!string.IsNullOrEmpty(outputFolderPath))
+        {
+            PatchList = patchRepository.LoadPatchesToList(outputFolderPath);
+        }
+    }
     
-    public void CreatePatch(string sha, string commitName)
+    public List<PatchInfo> PatchList { get; set; }  = new();
+    public string RepoFolderPath { get; set; } = string.Empty;
+
+    public void ExportPatch(string sha, string commitName)
     {
-        var output = Path.Combine(settingsService.Settings.OutputFolderPath,
-            $"{_counter.ToString().PadLeft(4, '0')}-{CleanPatchName(commitName)}.patch");
-        
-        var command = @$"git format-patch -1 -B1% {sha} --output='{output}'";
+        PatchList.Add(_patchRepository.CreatePatchFile(sha, commitName));
+    }
+    
 
-        using var powershell = PowerShell.Create();
-        powershell.AddScript(@$"cd {gitInfoService.RepositoryPath}");
-        powershell.AddScript(command);
-
-        var results = powershell.Invoke();
-        _counter++;
+    public void ApplyPatch(PatchInfo patch)
+    {
+        _patchRepository.ApplyPatchFile(patch);
     }
 
-    public void ApplyPatch()
-    {
-        throw new NotImplementedException();
-    }
+    
 
-    private string CleanPatchName(string input)
-    {
-        var ret = input.Trim();
-        ret = ret.Replace(" ", "_");
-        ret = ret.Replace(Environment.NewLine, "");
-        ret = ret.Replace("\n", "");
-        return ret;
-    }
+
 }
