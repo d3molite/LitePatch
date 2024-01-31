@@ -35,7 +35,7 @@
     private void CreatePatch(Commit commit)
     {
         var sha = commit.Sha;
-        GitPatchService.CreatePatch(sha, commit.Message);
+        GitPatchService.ExportPatch(sha, commit.Message);
     }
     
     
