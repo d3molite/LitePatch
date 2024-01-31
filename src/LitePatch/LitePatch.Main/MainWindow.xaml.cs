@@ -3,6 +3,7 @@ using LitePatch.Services.Interfaces;
 using LitePatch.Services.Repo;
 using LitePatch.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using MudBlazor.Services;
 
 namespace LitePatch;
@@ -22,9 +23,11 @@ public partial class MainWindow : Window
         collection.AddMudServices();
 
         collection.AddSingleton<ISettingsRepository, SettingsRepository>();
+        collection.AddSingleton<IPatchRepository, PatchRepository>();
         collection.AddSingleton<ISettingsService, SettingsService>();
         collection.AddSingleton<IGitInfoService, GitInfoService>();
         collection.AddSingleton<IGitPatchService, GitPatchService>();
+  
 
         
         Resources.Add("services", collection.BuildServiceProvider());
