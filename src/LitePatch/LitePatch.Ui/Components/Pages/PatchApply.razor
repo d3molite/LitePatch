@@ -1,0 +1,49 @@
+﻿@page "/PatchApply"
+@using LitePatch.Services.Interfaces
+@using LitePatch.Ui.Components.Controls
+@using LitePatch.Services.Models
+@inject IGitPatchService GitPatchService
+
+<MudPaper Elevation="2">
+    <MudStack>
+    <MudText>Apply Patches to:</MudText>
+        <FolderPicker 
+            Label="Repository" 
+            FolderPath="@GitPatchService.RepoFolderPath" 
+            FolderPathChanged="v => SetRepoPath(v)"/>
+    </MudStack>
+</MudPaper>
+
+<MudPaper Elevation="2">
+        <MudText>Apply a patch by clicking the symbol next to the patch name </MudText>
+        <MudTable Items="@GitPatchService.PatchList" Dense="true" Elevation="0">
+            <HeaderContent>
+                <MudTh>Patch Name</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="CommitName">@context.GetPatchName()</MudTd>
+                <MudTd DataLabel="Actions">
+                    <CellTemplate>
+                        <MudIconButton Disabled="context.AppliedStatus()" 
+                                       Icon="@Icons.Material.Filled.KeyboardDoubleArrowLeft" 
+                                       @onclick="() => ApplyPatch(context)"/>
+                    </CellTemplate>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+</MudPaper>
+
+@code {
+
+    private void SetRepoPath(string path)
+    {
+        GitPatchService.RepoFolderPath = path;
+    }
+    
+    private void ApplyPatch(PatchInfo patch)
+    {
+        GitPatchService.ApplyPatch(patch);
+    }
+    
+}
