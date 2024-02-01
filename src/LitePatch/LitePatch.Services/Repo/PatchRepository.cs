@@ -1,5 +1,4 @@
 ﻿using System.Management.Automation;
-using LibGit2Sharp;
 using LitePatch.Services.Interfaces;
 using LitePatch.Services.Models;
 
@@ -7,12 +6,11 @@ namespace LitePatch.Services.Repo;
 
 public class PatchRepository(IGitInfoService gitInfoService, ISettingsService settingsService) : IPatchRepository
 {
-    private int _counter = 1;
     
-    public PatchInfo CreatePatchFile(string sha, string commitName)
+    public PatchInfo CreatePatchFile(string sha, string commitName, int counter)
     {
         var output = Path.Combine(settingsService.Settings.OutputFolderPath,
-            $"{_counter.ToString().PadLeft(4, '0')}-{CleanPatchName(commitName)}.patch");
+            $"{counter.ToString().PadLeft(4, '0')}-{CleanPatchName(commitName)}.patch");
         
         var command = @$"git format-patch -1 -B1% {sha} --output='{output}'";
 
@@ -21,30 +19,29 @@ public class PatchRepository(IGitInfoService gitInfoService, ISettingsService se
         powershell.AddScript(command);
 
         var results = powershell.Invoke();
-        _counter++;
         
         return new PatchInfo(commitName, output);
         
     }
     
-    private string CleanPatchName(string input)
+    private static string CleanPatchName(string input)
     {
         var ret = input.Trim();
         ret = ret.Replace(" ", "_");
         ret = ret.Replace(Environment.NewLine, "");
         ret = ret.Replace("\n", "");
+        
         return ret;
     }
 
-    private List<PatchInfo> BuildCleanPatchList(List<string> rawPatchList, string path)
+    private List<PatchInfo> BuildCleanPatchList(List<string> rawPatchList)
     {
         List<PatchInfo> patchList = new();
 
         foreach (var patchNamePath in rawPatchList)
         {
-            var patchPath = patchNamePath;
-            var patchName = System.IO.Path.GetFileNameWithoutExtension(patchNamePath);
-            patchList.Add(new PatchInfo(patchName, patchPath));
+            var patchName = Path.GetFileNameWithoutExtension(patchNamePath);
+            patchList.Add(new PatchInfo(patchName, patchNamePath));
         }
 
         return patchList;
@@ -57,26 +54,28 @@ public class PatchRepository(IGitInfoService gitInfoService, ISettingsService se
         powershell.AddScript(command);
         var results = powershell.Invoke();
 
-        List<string> rawPatchList = results.Select(result => result.ToString()).ToList();        
+        var rawPatchList = results.Select(result => result.ToString()).ToList();        
         
-        return BuildCleanPatchList(rawPatchList, path);
+        return BuildCleanPatchList(rawPatchList);
     }
 
-    public bool ApplyPatchFile(PatchInfo patch)
+    public bool ApplyPatchFile(PatchInfo patchInfo)
     {
-        var command = $"git apply -3 --3 --ignore-space-change --ignore-whitespace {patch.GetPatchFilePath()}";
+        var command = $"git apply -3 --3 --ignore-space-change --ignore-whitespace {patchInfo.PatchPath}";
 
         using var powershell = PowerShell.Create();
         powershell.AddScript(@$"cd {gitInfoService.RepositoryPath}");
         powershell.AddScript(command);
-
+        
+        //Take a look at results and evaluate displaying potential errors if direct powershell messages
+        
         if (powershell.Invoke() != null)
         {
-            patch.MarkAsApplied();
+            patchInfo.HasBeenApplied = true;
             return true;
         }
-
+        
         return false;
-
     }
+    
 }
