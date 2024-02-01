@@ -27,7 +27,6 @@ public class SettingsRepository : ISettingsRepository
             var text = File.ReadAllText(SettingsFilePath);
             return JsonSerializer.Deserialize<ApplicationSetting>(text)!;
     }
-    
 
     public void WriteSettings(ApplicationSetting settings)
     {
@@ -46,7 +45,5 @@ public class SettingsRepository : ISettingsRepository
         if (!Directory.Exists(_settingsPath))
             Directory.CreateDirectory(_settingsPath);
     }
-    
-    
 
 }
