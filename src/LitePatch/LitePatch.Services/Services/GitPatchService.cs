@@ -8,18 +8,28 @@ public class GitPatchService(IPatchRepository patchRepository) : IGitPatchServic
 {
     private int _counter = 1;
 
-    public List<PatchInfo> PatchList { get; set; }  = new();
+    public List<PatchInfo> PatchList { get; set; } = new();
     public string PatchFolderPath { get; set; } = string.Empty;
 
-    public void ExportPatch(string sha, string commitName)
+    public bool ExportPatch(string sha, string commitName)
     {
-        patchRepository.CreatePatchFile(sha, commitName, _counter);
-        _counter++;
+        if (patchRepository.CreatePatchFile(sha, commitName, _counter))
+        {
+            _counter++;
+            return true;
+        }
+
+        return false;
     }
-    
-    public void ApplyPatch(PatchInfo patch)
+
+    public bool ApplyPatch(PatchInfo patch)
     {
-        patchRepository.ApplyPatchFile(patch);
+        if (patchRepository.ApplyPatchFile(patch))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public bool LoadPatchesFromFolder()
@@ -37,5 +47,4 @@ public class GitPatchService(IPatchRepository patchRepository) : IGitPatchServic
 
         return true;
     }
-
 }
