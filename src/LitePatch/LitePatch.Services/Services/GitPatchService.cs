@@ -1,43 +1,41 @@
-﻿using System.Management.Automation;
-using LibGit2Sharp;
-using LitePatch.Services.Interfaces;
+﻿using LitePatch.Services.Interfaces;
 using LitePatch.Services.Models;
-using LitePatch.Services.Repo;
+
 
 namespace LitePatch.Services.Services;
 
-public class GitPatchService() : IGitPatchService
+public class GitPatchService(IPatchRepository patchRepository) : IGitPatchService
 {
+    private int _counter = 1;
 
-    private readonly IPatchRepository _patchRepository;
-    private readonly ISettingsService _settingsService;
-
-    public GitPatchService(IPatchRepository patchRepository, ISettingsService settingsService) : this()
-    {
-        _patchRepository = patchRepository;
-        var outputFolderPath = settingsService.Settings.OutputFolderPath;
-
-        if (!string.IsNullOrEmpty(outputFolderPath))
-        {
-            PatchList = patchRepository.LoadPatchesToList(outputFolderPath);
-        }
-    }
-    
     public List<PatchInfo> PatchList { get; set; }  = new();
-    public string RepoFolderPath { get; set; } = string.Empty;
+    public string PatchFolderPath { get; set; } = string.Empty;
 
     public void ExportPatch(string sha, string commitName)
     {
-        PatchList.Add(_patchRepository.CreatePatchFile(sha, commitName));
+        patchRepository.CreatePatchFile(sha, commitName, _counter);
+        _counter++;
     }
     
-
     public void ApplyPatch(PatchInfo patch)
     {
-        _patchRepository.ApplyPatchFile(patch);
+        patchRepository.ApplyPatchFile(patch);
     }
 
-    
+    public bool LoadPatchesFromFolder()
+    {
+        if (string.IsNullOrEmpty(PatchFolderPath)) return false;
 
+        try
+        {
+            PatchList = patchRepository.LoadPatchesToList(PatchFolderPath);
+        }
+        catch
+        {
+            return false;
+        }
+
+        return true;
+    }
 
 }
