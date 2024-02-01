@@ -1,4 +1,5 @@
 ﻿@using LitePatch.Services.Interfaces
+@using LitePatch.Services.Services
 @inject IGitInfoService GitInfoService
 
 <MudAppBar Elevation="3" Class="d-flex">
@@ -10,7 +11,6 @@
         <MudIconButton Icon="@Icons.Material.Filled.Refresh" Color="Color.Default" @onclick="Refresh"></MudIconButton>
     </MudStack>
 </MudAppBar>
-
 
 @code {
 

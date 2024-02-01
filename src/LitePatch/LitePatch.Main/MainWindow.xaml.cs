@@ -3,7 +3,6 @@ using LitePatch.Services.Interfaces;
 using LitePatch.Services.Repo;
 using LitePatch.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using MudBlazor.Services;
 
 namespace LitePatch;
