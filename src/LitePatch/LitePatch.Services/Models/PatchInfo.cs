@@ -2,37 +2,12 @@
 
 namespace LitePatch.Services.Models;
 
-public class PatchInfo : IPatchInfo
+public class PatchInfo(string commitName, string patchPath) : IPatchInfo
 {
-    private string _patchName { get; }
-    private string _patchPath { get; }
-    private bool _hasbeenApplied;
-
-    public PatchInfo(string commitName, string patchPath)
-    {
-        _patchName = commitName;
-        _patchPath = patchPath;
-        _hasbeenApplied = false;
-
-    }
-
-    public string GetPatchName()
-    {
-        return _patchName;
-    }
+    public string PatchName { get; } = commitName;
     
-    public string GetPatchFilePath()
-    {
-        return _patchPath;
-    }
-
-    public bool AppliedStatus()
-    {
-        return _hasbeenApplied;
-    }
-
-    public void MarkAsApplied()
-    {
-        _hasbeenApplied = true;
-    }
+    public string PatchPath { get; } = patchPath;
+    
+    public bool HasBeenApplied { get; set; } = false; 
+    
 }
