@@ -3,6 +3,7 @@ using LitePatch.Services.Interfaces;
 using LitePatch.Services.Repo;
 using LitePatch.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
 using MudBlazor.Services;
 
 namespace LitePatch;
@@ -15,18 +16,22 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        
+
         var collection = new ServiceCollection();
         collection.AddWpfBlazorWebView();
         collection.AddBlazorWebViewDeveloperTools();
-        collection.AddMudServices();
+        collection.AddMudServices(config =>
+        {
+            config.SnackbarConfiguration.ShowCloseIcon = true;
+            config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
+        });
 
         collection.AddSingleton<ISettingsRepository, SettingsRepository>();
         collection.AddSingleton<IPatchRepository, PatchRepository>();
         collection.AddSingleton<ISettingsService, SettingsService>();
         collection.AddSingleton<IGitInfoService, GitInfoService>();
         collection.AddSingleton<IGitPatchService, GitPatchService>();
-        
+
         Resources.Add("services", collection.BuildServiceProvider());
     }
 }
