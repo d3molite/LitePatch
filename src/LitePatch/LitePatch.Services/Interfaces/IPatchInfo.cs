@@ -1,11 +1,11 @@
-﻿using LibGit2Sharp;
-using LitePatch.Services.Models;
-
-namespace LitePatch.Services.Interfaces;
+﻿namespace LitePatch.Services.Interfaces;
 
 public interface IPatchInfo
 {
-    string GetPatchFilePath();
-    void MarkAsApplied();
+    public string PatchName { get; }
+    
+    public string PatchPath { get; }
+    
+    public bool HasBeenApplied { get; set; }
 
 }
