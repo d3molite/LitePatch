@@ -49,7 +49,7 @@ public class PatchRepository(IGitInfoService gitInfoService, ISettingsService se
 
     public List<PatchInfo> LoadPatchesToList(string path)
     {
-        var command = $"Get-ChildItem -Path {path} -Recurse -Include *.patch";
+        var command = $"Get-ChildItem -Path '{path}' -Recurse -Include *.patch";
         using var powershell = PowerShell.Create();
         powershell.AddScript(command);
         var results = powershell.Invoke();
