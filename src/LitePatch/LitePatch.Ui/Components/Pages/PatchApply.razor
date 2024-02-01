@@ -6,15 +6,15 @@
 
 <MudPaper Elevation="2">
     <MudStack>
-    <MudText>Apply Patches to:</MudText>
+    <MudText>Apply patches from:</MudText>
         <FolderPicker 
-            Label="Repository" 
-            FolderPath="@GitPatchService.RepoFolderPath" 
-            FolderPathChanged="v => SetRepoPath(v)"/>
+            Label="Patch Folder" 
+            FolderPath="@GitPatchService.PatchFolderPath" 
+            FolderPathChanged="v => SetPatchFolderPath(v)"/>
     </MudStack>
 </MudPaper>
 
-<MudPaper Elevation="2">
+<MudPaper Class="mt-1"  Elevation="2">
         <MudText>Apply a patch by clicking the symbol next to the patch name </MudText>
         <MudTable Items="@GitPatchService.PatchList" Dense="true" Elevation="0">
             <HeaderContent>
@@ -22,10 +22,10 @@
                 <MudTh>Actions</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="CommitName">@context.GetPatchName()</MudTd>
+                <MudTd DataLabel="CommitName">@context.PatchName</MudTd>
                 <MudTd DataLabel="Actions">
                     <CellTemplate>
-                        <MudIconButton Disabled="context.AppliedStatus()" 
+                        <MudIconButton Disabled="context.HasBeenApplied" 
                                        Icon="@Icons.Material.Filled.KeyboardDoubleArrowLeft" 
                                        @onclick="() => ApplyPatch(context)"/>
                     </CellTemplate>
@@ -36,9 +36,11 @@
 
 @code {
 
-    private void SetRepoPath(string path)
+    private void SetPatchFolderPath(string path)
     {
-        GitPatchService.RepoFolderPath = path;
+        GitPatchService.PatchFolderPath = path;
+        GitPatchService.LoadPatchesFromFolder();
+
     }
     
     private void ApplyPatch(PatchInfo patch)
