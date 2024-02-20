@@ -1,7 +1,7 @@
 ﻿@page "/PatchCreate"
 @using LitePatch.Services.Interfaces
 @using LibGit2Sharp
-@using LitePatch.Ui.Components.Controls
+@inject ISnackbar Snackbar
 @inject IGitInfoService GitInfoService
 @inject IGitPatchService GitPatchService
 
@@ -27,6 +27,7 @@
 
 
 @code {
+
     protected override void OnInitialized()
     {
         GitInfoService.InfoChanged += (_, _) => InvokeAsync(StateHasChanged);
@@ -35,9 +36,12 @@
     private void CreatePatch(Commit commit)
     {
         var sha = commit.Sha;
-        GitPatchService.ExportPatch(sha, commit.Message);
+        
+        if (!GitPatchService.ExportPatch(sha, commit.Message))
+        {
+            Snackbar.Add("Patch could not be created", Severity.Error);
+        }
+        Snackbar.Add($"Patch created successfully", Severity.Success);
     }
     
-    
-
 }

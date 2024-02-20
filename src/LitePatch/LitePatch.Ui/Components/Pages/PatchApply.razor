@@ -2,36 +2,37 @@
 @using LitePatch.Services.Interfaces
 @using LitePatch.Ui.Components.Controls
 @using LitePatch.Services.Models
+@inject ISnackbar Snackbar
 @inject IGitPatchService GitPatchService
 
 <MudPaper Elevation="2">
     <MudStack>
-    <MudText>Apply patches from:</MudText>
-        <FolderPicker 
-            Label="Patch Folder" 
-            FolderPath="@GitPatchService.PatchFolderPath" 
+        <MudText>Apply patches from:</MudText>
+        <FolderPicker
+            Label="Patch Folder"
+            FolderPath="@GitPatchService.PatchFolderPath"
             FolderPathChanged="v => SetPatchFolderPath(v)"/>
     </MudStack>
 </MudPaper>
 
-<MudPaper Class="mt-1"  Elevation="2">
-        <MudText>Apply a patch by clicking the symbol next to the patch name </MudText>
-        <MudTable Items="@GitPatchService.PatchList" Dense="true" Elevation="0">
-            <HeaderContent>
-                <MudTh>Patch Name</MudTh>
-                <MudTh>Actions</MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="CommitName">@context.PatchName</MudTd>
-                <MudTd DataLabel="Actions">
-                    <CellTemplate>
-                        <MudIconButton Disabled="context.HasBeenApplied" 
-                                       Icon="@Icons.Material.Filled.KeyboardDoubleArrowLeft" 
-                                       @onclick="() => ApplyPatch(context)"/>
-                    </CellTemplate>
-                </MudTd>
-            </RowTemplate>
-        </MudTable>
+<MudPaper Class="mt-1" Elevation="2">
+    <MudText>Apply a patch by clicking the symbol next to the patch name </MudText>
+    <MudTable Items="@GitPatchService.PatchList" Dense="true" Elevation="0">
+        <HeaderContent>
+            <MudTh>Patch Name</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="CommitName">@context.PatchName</MudTd>
+            <MudTd DataLabel="Actions">
+                <CellTemplate>
+                    <MudIconButton Disabled="context.HasBeenApplied"
+                                   Icon="@Icons.Material.Filled.KeyboardDoubleArrowLeft"
+                                   @onclick="() => ApplyPatch(context)"/>
+                </CellTemplate>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 </MudPaper>
 
 @code {
@@ -40,12 +41,15 @@
     {
         GitPatchService.PatchFolderPath = path;
         GitPatchService.LoadPatchesFromFolder();
-
     }
-    
+
     private void ApplyPatch(PatchInfo patch)
     {
-        GitPatchService.ApplyPatch(patch);
+        if (!GitPatchService.ApplyPatch(patch))
+        {
+            Snackbar.Add("Patch could not be applied", Severity.Error);
+        }
+        Snackbar.Add("Patch applied Successfully", Severity.Success);
     }
-    
+
 }
